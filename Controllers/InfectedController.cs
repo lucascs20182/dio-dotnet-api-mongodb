@@ -1,3 +1,4 @@
+using System;
 using Api.Data.Collections;
 using Api.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,23 @@ namespace Api.Controllers
             var infected = _infectedCollection.Find(Builders<Infected>.Filter.Empty).ToList();
             
             return Ok(infected);
+        }
+
+        [HttpPut]
+        public ActionResult UpdateInfected([FromBody] InfectedDto dto)
+        {
+            _infectedCollection.UpdateOne(Builders<Infected>.Filter.Where(_ => _.BirthDate == dto.BirthDate), 
+                Builders<Infected>.Update.Set("gender", dto.Gender));
+            
+            return Ok("Atualizado com sucesso");
+        }
+
+        [HttpDelete]
+        public ActionResult DeleteInfected(DateTime birthDate)
+        {
+            _infectedCollection.DeleteOne(Builders<Infected>.Filter.Where(_ => _.BirthDate == birthDate)); 
+            
+            return Ok("Deletado com sucesso");
         }
     }
 }
